@@ -25,17 +25,17 @@ Funcionalidade: Inserir usuários na API
 
 # Propósito da biblioteca
 
-Existem diversos casos em testes onde não é possível ser totalmente deterministico. No exemplo passado não é possível determinar exatamente qual o valor do `identificador` do usuário. Mas é possível validar que o dado existe, dado que uma das regras é que todo usuário tenha um identificador no banco de dados. Então dessa maneira sabemos que o tipo do valor do `indentificador` é `int` ou de maneira mais genérica `Number`, que pode ser consideirado um tipo genérico para qualquer tipo de valor numérico. Como `int`, `float`, `complex` ...
+Existem diversos casos em testes onde não é possível ser totalmente determinístico. No exemplo acima não é possível determinar exatamente qual o valor do `identificador` do usuário. Mas é possível validar que o dado existe, já que uma das regras é que todo usuário tenha um identificador no banco de dados. Assim podemos saber que o tipo do valor do `indentificador` é `int`, ou de maneira mais genérica, `Number`, que pode ser consideirado um tipo para qualquer valor numérico, como `int`, `float`, `complex`, ...
 
 
 ## Validadores
 
-A ideia dos validadores é trabalhar com os possíves tipos de dados que poderiam ser encontrados em uma tabela e fazer a avaliação dos mesmos usando a biblioteca.
+A idéia dos validadores é trabalhar com os possíves tipos de dados que podem ser encontrados em uma tabela e fazer a avaliação dos mesmos usando a biblioteca.
 
 
 ### Any
 
-O tipo Any tem a função de checar somente se o valor existe, não se responsabilizando pelo tipo ou mesmo pelo conteúdo. Pois em casos onde a tabela não conseguiria expor algum tipo de validação.
+O tipo Any tem a função de checar somente se o valor existe, não se responsabilizando pela identificação do tipo ou mesmo pelo conteúdo. Isso ocorre em casos onde a tabela não consegue expor algum tipo de validação.
 
 ```Gherkin
 Então a API deve retornar
@@ -46,7 +46,7 @@ Então a API deve retornar
 
 ### Bollean
 
-A ideia do tipo `Boolean` é fazer o tipo mais simples de validação, pois o boolean só tem dois estados
+A idéia do tipo `Boolean` é fazer o esquema mais simples de validação, pois o boolean só tem dois estados.
 
 ```Gherkin
 Então a API deve retornar
@@ -54,17 +54,17 @@ Então a API deve retornar
  | sucess   | Bollean |
 ```
 
-No caso onde não será validada a resposta. Mas somente se a API está respondendo no formato correto
+Neste caso não será validada a resposta, mas somente se a API responder no formato correto.
 
 
 ### Number
 
-Tipo genérico para qualquer tipo de numero, pode-se pensar em [`numbers.Number`](https://docs.python.org/3.8/library/numbers.html#numbers.Number) (tipo genérico em python). Com isso podemos usar todos os [métodos de comparação embutidos](https://docs.python.org/3.8/library/stdtypes.html#comparisons) no Python para fazer as validações. Algums exemplos:
+Tipo genérico para qualquer forma numérica, pode-se pensar em [`numbers.Number`](https://docs.python.org/3.8/library/numbers.html#numbers.Number) (tipo genérico em python). Com isso podemos usar todos os [métodos de comparação embutidos](https://docs.python.org/3.8/library/stdtypes.html#comparisons) no Python para fazer as validações. Algums exemplos:
 
 
 | Método             |
 | ------------------ |
-| less_then     (<)  |
+| less_than     (<)  |
 | less_equal    (<=) |
 | greater_than  (>)  |
 | greater_equal (>=) |
@@ -73,16 +73,16 @@ Tipo genérico para qualquer tipo de numero, pode-se pensar em [`numbers.Number`
 O que poderia resultar em validadores assim:
   - `Number`
     - valida somente se o valor é um número
- - `Number(less_then=7)`
-   - onde o número deveria ser menor do que 7
+ - `Number(less_than=7)`
+   - valida o número se for menor do que 7
  - `Number(not_equal=10)`
-   - Onde o número não pode ser 10
+   - valida o número se for diferente de 10
 
-obs: acredito que nesse caso o método equal (==) não é aplicável, pois o numero poderia ser inserido literal na tabela.
+obs: Nesse caso o método equal (==) não é aplicável, pois o número pode ser inserido literalmente na tabela.
 
 ### [Text](https://docs.python.org/3.8/library/stdtypes.html#text-sequence-type-str)
 
-Além dos métodos de comparação poderiam ser usados [métodos embutidos em iteráveis](https://docs.python.org/3.8/library/stdtypes.html#sequence-types-list-tuple-range) como:
+Além dos métodos de comparação, poderm ser usados [métodos embutidos em iteráveis](https://docs.python.org/3.8/library/stdtypes.html#sequence-types-list-tuple-range) como:
 
 | Método |
 | ------ |
@@ -90,7 +90,7 @@ Além dos métodos de comparação poderiam ser usados [métodos embutidos em it
 | min    |
 | max    |
 
-Porém acredito que para que a API sejá simplficada podemos usar somente combinações dos métodos
+Para que a API seja simplficada pode-se utlizar apenas combinações dos métodos:
 
 | Método     | Validação       |
 | ---------- | --------------- |
@@ -99,18 +99,19 @@ Porém acredito que para que a API sejá simplficada podemos usar somente combin
 | max_length | tamanho máximo  |
 
 
-O que poderia resultar em validadores assim:
+O que permite resultar em validadores como:
+
 - `Text`
-  - valida somente se o valor é uma string
+  - valida somente se o valor for uma string
 - `Text(length=7)`
-  - onde a string deveria ter o tamanho igual a 7
+  - valida a string quando tiver o tamanho igual a 7
 - `Text(min_length=7)`
-  - onde a string deveria ter o tamanho mínimo de 7
+  - valida a string quando tiver o tamanho mínimo de 7
 - `Text(max_length=7)`
-  - onde a string deveria ter o tamanho máximo de 7
+  - valida a string quando tiver o tamanho máximo de 7
 
 
-Acredito que a API de Text deve ser compatível com a definição de [typing.Text](https://docs.python.org/3.8/library/typing.html#typing.Text) onde é mantida a retrocampatibilidade com o tipo `unicode`
+A API de Text deve ser compatível com a definição de [typing.Text](https://docs.python.org/3.8/library/typing.html#typing.Text), onde é mantida a retrocampatibilidade com o tipo `unicode`
 
 
 ### Date
@@ -128,7 +129,7 @@ Acredito que a API de Text deve ser compatível com a definição de [typing.Tex
 
 ## API
 
-Penso em levar a complexidade para validação a nível para os steps
+Penso em levar a complexidade para validação de níveis para os steps
 
 ```Python
 from behave import then
@@ -140,7 +141,7 @@ def check_api_response(context):
   ...
 ```
 
-Onde a função `validate_table` se encarrege de fazer as validações. Para os tipos extendidos pelos usuários deve ser possível que esse decoradore tenha mais uma camada a nível que possam ser passados novas classes de validadores.
+Onde a função `validate_table` se encarrega de fazer as validações. Para os tipos extendidos pelos usuários deve ser possível que esse decorador tenha mais uma camada de nível que possam ser passados para novas classes de validadores.
 
 ```Python
 from behave import then
@@ -158,19 +159,19 @@ def check_api_response(context, validations):
 ## Arquitetura
 
 Podemos pensar em um modelo como o [ast.literal_eval](https://docs.python.org/3.8/library/ast.html#ast.literal_eval) presente na biblioteca padrão para fazer a avaliação das strings no código.
-...
+
 
 ## Suporte a versões
 
-O behave atualmente [oferece suporte](https://github.com/behave/behave/blob/master/tox.ini) as verões maiores do python 3.2, ebora ofereça suporte ao python 2, acredito que isso não deva estar no roadmap
+O behave atualmente [oferece suporte](https://github.com/behave/behave/blob/master/tox.ini) as versões do python 3.2 em diante. Embora ofereça suporte ao python 2, acredito que isso não deva estar no roadmap.
 
 ## Integração contínua
 
-Penso em usar o tox para trabalhar com versões do python no mesmo test runner
+Penso em usar o tox para trabalhar com versões do python no mesmo test runner.
 
 ## Testes
 
 
 ## padronização de código
 
-Pretendo seguir a risca a PEP-8 e a PEP-257, todo o código deve ser formatado com [Black](https://github.com/python/black). Sempre onde houver dúvidas sobre identação, opte sempre por [Vertical Hanging Indent](https://github.com/timothycrosley/isort)
+Pretendo seguir a risca a PEP-8 e a PEP-257. Todo o código deve ser formatado com [Black](https://github.com/python/black). Sempre quando houver dúvidas sobre identação, opte por [Vertical Hanging Indent](https://github.com/timothycrosley/isort)
