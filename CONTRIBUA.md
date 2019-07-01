@@ -44,14 +44,14 @@ Então a API deve retornar
 ```
 
 
-### Bollean
+### Boolean
 
 A idéia do tipo `Boolean` é fazer o esquema mais simples de validação, pois o boolean só tem dois estados.
 
 ```Gherkin
 Então a API deve retornar
  | mensagem | estado  |
- | sucess   | Bollean |
+ | sucess   | Boolean |
 ```
 
 Neste caso não será validada a resposta, mas somente se a API responder no formato correto.
