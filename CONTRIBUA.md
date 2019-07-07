@@ -36,8 +36,11 @@ Os estilos de uso da biblioteca tendem a ser ilimitados em relação a bibliotec
 
 A idéia dos validadores é trabalhar com os possíves tipos de dados que podem ser encontrados em uma tabela e fazer a avaliação dos mesmos usando a biblioteca.
 
+### Validadores estáticos
 
-### Any
+Tipos de validadores onde somente o tipo deve ser suficiente para o match ocorrer. Ou seja, não há parâmetros para esse validadores. `Any` por exemplo, só deve checar se o valor recebido existe, indepente do seu tipo. Já o validador `Boolean` deve checar se o tipo recebido corresponde ao range de valores `True` ou `False`
+
+#### Any
 
 O tipo Any tem a função de checar somente se o valor existe, não se responsabilizando pela identificação do tipo ou mesmo pelo conteúdo. Isso ocorre em casos onde a tabela não consegue expor algum tipo de validação.
 
@@ -48,7 +51,7 @@ Então a API deve retornar
 ```
 
 
-### Boolean
+#### Boolean
 
 A idéia do tipo `Boolean` é fazer o esquema mais simples de validação, pois o boolean só tem dois estados.
 
@@ -61,7 +64,11 @@ Então a API deve retornar
 No caso onde não será validada a resposta. Mas somente se a API está respondendo no formato correto, `True` ou `False`
 
 
-### Number
+### Validadores dinâmicos
+
+Validadores dinâmicos devem extender funcionalidades de validadores estáticos. Pois além de fazer a validação do tipo, podem fazer outros tipos de validação. Como exemplo vamos usar o validator `Text`. Ele pode ser usado em sua forma mais simples, estática. `Text`, onde o valor passado ao validador será somente comparado a nível de tipagem. Ou seja, se é uma string. Porém, também é possível usar a forma dinámica. `Text(max_length=10)`. Nesse caso a validação do tipo vai ocorrer, porém também será checado se o tamanho máximo da string é de 10 caracteres.
+
+#### Number
 
 Tipo genérico para qualquer forma numérica, pode-se pensar em [`numbers.Number`](https://docs.python.org/3.8/library/numbers.html#numbers.Number) (tipo genérico em Python). Com isso podemos usar todos os [métodos de comparação embutidos](https://docs.python.org/3.8/library/stdtypes.html#comparisons) no Python para fazer as validações. Algums exemplos:
 
@@ -84,7 +91,7 @@ O que poderia resultar em validadores assim:
 
 Obs: Nesse caso o método `equal (==)` não é aplicável, pois o número pode ser inserido literalmente na tabela.
 
-### [Text](https://docs.python.org/3.8/library/stdtypes.html#text-sequence-type-str)
+#### [Text](https://docs.python.org/3.8/library/stdtypes.html#text-sequence-type-str)
 
 Além dos métodos de comparação, podem ser usados [métodos embutidos em iteráveis](https://docs.python.org/3.8/library/stdtypes.html#sequence-types-list-tuple-range) como:
 
@@ -118,17 +125,18 @@ O que permite resultar em validadores como:
 A API de `Text` deve ser compatível com a definição de [typing.Text](https://docs.python.org/3.8/library/typing.html#typing.Text), onde é mantida a retrocompatibilidade com o tipo `unicode`.
 
 
-### Date
+#### Date
 
 ...
 
-### DateTime
+#### DateTime
 
 ...
 
-## Posibilidade de extender
+## Posibilidade de extender novos validadores
 
- ...
+...
+
 
 
 ## API
@@ -162,16 +170,95 @@ def check_api_response(context, validations):
 
 ## Arquitetura
 
-Podemos pensar em um modelo como o [ast.literal_eval](https://docs.python.org/3.8/library/ast.html#ast.literal_eval) presente na biblioteca padrão para fazer a avaliação das strings no código.
+a implementação pode ser pensanda em 3 atores principais.
 
-Exemplo:
+`Dispatcher`, `Validator`, `Register`
+
+...
+
+### validate_table
+
+> TODO: pensar em um nome melhor pra essa função
+
+Função responsável por fazer o filtro por rows da tabela e separar os valores em três camadas.
+
+- `string_matches`: Valores para quais os validators da biblioteca não foram definidos
+- `static_matches`: Valores definidos com validators estáticos
+- `dynamic_matches`: Valores onde validadores dinâmicos foram definidos
+
+Por exemplo, a função deve envocar a camada do `Dispatcher` para que ele diga se é um Validaror e qual o seu tipo.
 
 ```Python
->>> validator_eval('Any')
-Any
+def validate_table(context.table, sequence_data):
+    ...
 ```
 
-Onde o type `Any` deverá implementar
+...
+
+### Dispatcher
+Podemos pensar em um modelo como o [ast.literal_eval](https://docs.python.org/3.8/library/ast.html#ast.literal_eval) presente na biblioteca padrão para fazer a avaliação das strings no código.
+
+Exemplos:
+
+Quando o valor recebido não foi um validador registrado, a mesma string que foi recebida deve ser retornada
+
+```Python
+>>> validator_eval('7')
+'7'
+```
+
+Os tipos estáticos de validadores, como `Any`, `Boolean`
+```Python
+>>> validator_eval('StaticValidatorClass')
+ValidatorClass
+```
+
+```Python
+>>> validator_eval('DynamicValidatorClass(validation_a=7, validation_B=14)')
+DynamicValidatorClass, validators
+```
+
+Com isso podemos montar um esquema de dispatchers. Onde o ...
+
+
+### Validator
+
+Onde o type `Validator` deverá implementar 3 métodos
+
+```Python
+from abc import abstractmethod, ABCMeta
+
+
+class MetaStaticValidator(abc=ABCMeta):
+  def __init__(self, value):
+    ...
+
+  @abstractmethod
+  def validate_error(self, **kwargs):
+    """
+    ...
+    """
+    ...
+
+  @abstractmethod
+  def validate_type(self):
+    """
+    ...
+    """
+    ...
+
+  @abstractmethod
+  def __call__(self):
+    """
+    ...
+    """
+    ...
+```
+
+
+### Register
+...
+
 
 ## Suporte a versões
 
@@ -183,6 +270,7 @@ Penso em usar o tox para trabalhar com versões do Python no mesmo test runner.
 
 ## Testes
 
+...
 
 ## Padronização de código
 
