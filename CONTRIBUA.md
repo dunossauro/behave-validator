@@ -19,13 +19,17 @@ Funcionalidade: Inserir usuários na API
       }
       """
     Então a API deve responder
-      | identificador | nome           | sexo      | email                    |
-      | Number        | Text(length=7) | Masculino | eduardo@livedepython.org |
+      | identificador* | idade  | nome           | sexo      | email                    |
+      | Any            | Number | Text(length=7) | Masculino | eduardo@livedepython.org |
 ```
+
+> `identificador` pode ser consideirada a fereência do objeto no banco de dados
 
 # Propósito da biblioteca
 
-Existem diversos casos em testes onde não é possível ser totalmente determinístico. No exemplo acima não é possível determinar exatamente qual o valor do `identificador` do usuário. Mas é possível validar que o dado existe, já que uma das regras é que todo usuário tenha um identificador no banco de dados. Assim podemos saber que o tipo do valor do `indentificador` é `int`, ou de maneira mais genérica, `Number`, que pode ser considerado um tipo para qualquer valor numérico, como `int`, `float`, `complex`, ...
+Existem diversos casos em testes onde não é possível ser totalmente deterministico. No exemplo passado não é possível determinar exatamente qual o valor do `identificador` do usuário, no banco de dados, usado no exemplo a cima. Mas é possível validar que o dado existe, dado que uma das regras é que todo usuário tenha um identificador no banco de dados. Então dessa maneira sabemos que o tipo do valor do `indentificador` é `int`, imaginando um banco de dados relaciona, ou de maneira mais genérica `Number`, que pode ser consideirado um tipo genérico para qualquer tipo de valor numérico. Como `int`, `float`, `complex`. Em outros casos pode ser que o banco usado seja o [mongodb](https://www.mongodb.com/) onde o tipo do identificador é um [`ObjectId`](https://docs.mongodb.com/manual/reference/method/ObjectId/). Nesse caso fica praticamente inviável validar o tipo. Pois o valor é dado partindo de um hash em hexa decimal. Podemos usar `Any`, pra validar somente que o valor existe na resposta da API. Por um exemplo.
+
+Os estilos de uso da biblioteca tendem a ser ilimitados em relação a bibliotecas externas usadas. Ou seja, será uma lib. de validação genérica.
 
 
 ## Validadores
@@ -54,7 +58,7 @@ Então a API deve retornar
  | sucess   | Boolean |
 ```
 
-Neste caso não será validada a resposta, mas somente se a API responder no formato correto.
+No caso onde não será validada a resposta. Mas somente se a API está respondendo no formato correto, `True` ou `False`
 
 
 ### Number
@@ -160,6 +164,14 @@ def check_api_response(context, validations):
 
 Podemos pensar em um modelo como o [ast.literal_eval](https://docs.python.org/3.8/library/ast.html#ast.literal_eval) presente na biblioteca padrão para fazer a avaliação das strings no código.
 
+Exemplo:
+
+```Python
+>>> validator_eval('Any')
+Any
+```
+
+Onde o type `Any` deverá implementar
 
 ## Suporte a versões
 
