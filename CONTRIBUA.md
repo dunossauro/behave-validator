@@ -1,8 +1,8 @@
 # Objetivo do projeto
 
-O objetivo desse projeto é montar uma extensão para o [Behave](https://github.com/behave/behave) capaz de validar dados gernéricos em tabelas do Gherkin.
+O objetivo desse projeto é montar uma extensão para o [Behave](https://github.com/behave/behave) capaz de validar dados genéricos em tabelas do Gherkin.
 
-Essa biblioteca de validações é baseada em outra bibliotecas de validação, como o [WTForms](https://github.com/wtforms/wtforms) e o [Marshmallow](https://github.com/marshmallow-code/marshmallow)
+Essa biblioteca de validações é baseada em outras bibliotecas de validação, como o [WTForms](https://github.com/wtforms/wtforms) e o [Marshmallow](https://github.com/marshmallow-code/marshmallow).
 
 Um exemplo:
 
@@ -25,7 +25,7 @@ Funcionalidade: Inserir usuários na API
 
 # Propósito da biblioteca
 
-Existem diversos casos em testes onde não é possível ser totalmente determinístico. No exemplo acima não é possível determinar exatamente qual o valor do `identificador` do usuário. Mas é possível validar que o dado existe, já que uma das regras é que todo usuário tenha um identificador no banco de dados. Assim podemos saber que o tipo do valor do `indentificador` é `int`, ou de maneira mais genérica, `Number`, que pode ser consideirado um tipo para qualquer valor numérico, como `int`, `float`, `complex`, ...
+Existem diversos casos em testes onde não é possível ser totalmente determinístico. No exemplo acima não é possível determinar exatamente qual o valor do `identificador` do usuário. Mas é possível validar que o dado existe, já que uma das regras é que todo usuário tenha um identificador no banco de dados. Assim podemos saber que o tipo do valor do `indentificador` é `int`, ou de maneira mais genérica, `Number`, que pode ser considerado um tipo para qualquer valor numérico, como `int`, `float`, `complex`, ...
 
 
 ## Validadores
@@ -59,7 +59,7 @@ Neste caso não será validada a resposta, mas somente se a API responder no for
 
 ### Number
 
-Tipo genérico para qualquer forma numérica, pode-se pensar em [`numbers.Number`](https://docs.python.org/3.8/library/numbers.html#numbers.Number) (tipo genérico em python). Com isso podemos usar todos os [métodos de comparação embutidos](https://docs.python.org/3.8/library/stdtypes.html#comparisons) no Python para fazer as validações. Algums exemplos:
+Tipo genérico para qualquer forma numérica, pode-se pensar em [`numbers.Number`](https://docs.python.org/3.8/library/numbers.html#numbers.Number) (tipo genérico em Python). Com isso podemos usar todos os [métodos de comparação embutidos](https://docs.python.org/3.8/library/stdtypes.html#comparisons) no Python para fazer as validações. Algums exemplos:
 
 
 | Método             |
@@ -78,11 +78,11 @@ O que poderia resultar em validadores assim:
  - `Number(not_equal=10)`
    - valida o número se for diferente de 10
 
-obs: Nesse caso o método equal (==) não é aplicável, pois o número pode ser inserido literalmente na tabela.
+Obs: Nesse caso o método `equal (==)` não é aplicável, pois o número pode ser inserido literalmente na tabela.
 
 ### [Text](https://docs.python.org/3.8/library/stdtypes.html#text-sequence-type-str)
 
-Além dos métodos de comparação, poderm ser usados [métodos embutidos em iteráveis](https://docs.python.org/3.8/library/stdtypes.html#sequence-types-list-tuple-range) como:
+Além dos métodos de comparação, podem ser usados [métodos embutidos em iteráveis](https://docs.python.org/3.8/library/stdtypes.html#sequence-types-list-tuple-range) como:
 
 | Método |
 | ------ |
@@ -90,7 +90,7 @@ Além dos métodos de comparação, poderm ser usados [métodos embutidos em ite
 | min    |
 | max    |
 
-Para que a API seja simplficada pode-se utlizar apenas combinações dos métodos:
+Para que a API seja simplificada pode-se utilizar apenas combinações dos métodos:
 
 | Método     | Validação       |
 | ---------- | --------------- |
@@ -111,7 +111,7 @@ O que permite resultar em validadores como:
   - valida a string quando tiver o tamanho máximo de 7
 
 
-A API de Text deve ser compatível com a definição de [typing.Text](https://docs.python.org/3.8/library/typing.html#typing.Text), onde é mantida a retrocampatibilidade com o tipo `unicode`
+A API de `Text` deve ser compatível com a definição de [typing.Text](https://docs.python.org/3.8/library/typing.html#typing.Text), onde é mantida a retrocompatibilidade com o tipo `unicode`.
 
 
 ### Date
@@ -163,15 +163,15 @@ Podemos pensar em um modelo como o [ast.literal_eval](https://docs.python.org/3.
 
 ## Suporte a versões
 
-O behave atualmente [oferece suporte](https://github.com/behave/behave/blob/master/tox.ini) as versões do python 3.2 em diante. Embora ofereça suporte ao python 2, acredito que isso não deva estar no roadmap.
+O Behave atualmente [oferece suporte](https://github.com/behave/behave/blob/master/tox.ini) as versões do Python 3.2 em diante. Embora ofereça suporte ao Python 2, acredito que isso não deva estar no roadmap.
 
 ## Integração contínua
 
-Penso em usar o tox para trabalhar com versões do python no mesmo test runner.
+Penso em usar o tox para trabalhar com versões do Python no mesmo test runner.
 
 ## Testes
 
 
-## padronização de código
+## Padronização de código
 
-Pretendo seguir a risca a PEP-8 e a PEP-257. Todo o código deve ser formatado com [Black](https://github.com/python/black). Sempre quando houver dúvidas sobre identação, opte por [Vertical Hanging Indent](https://github.com/timothycrosley/isort)
+Pretendo seguir a risca a PEP-8 e a PEP-257. Todo o código deve ser formatado com [Black](https://github.com/python/black). Sempre quando houver dúvidas sobre identação, opte por [Vertical Hanging Indent](https://github.com/timothycrosley/isort).
