@@ -23,26 +23,28 @@ Funcionalidade: Inserir usuários na API
       | Any            | Number | Text(length=7) | Masculino | eduardo@livedepython.org |
 ```
 
-> `identificador` pode ser consideirada a fereência do objeto no banco de dados
+> `identificador` pode ser consideirada a referência do objeto no banco de dados
+
 
 # Propósito da biblioteca
 
-Existem diversos casos em testes onde não é possível ser totalmente deterministico. No exemplo passado não é possível determinar exatamente qual o valor do `identificador` do usuário, no banco de dados, usado no exemplo a cima. Mas é possível validar que o dado existe, dado que uma das regras é que todo usuário tenha um identificador no banco de dados. Então dessa maneira sabemos que o tipo do valor do `indentificador` é `int`, imaginando um banco de dados relaciona, ou de maneira mais genérica `Number`, que pode ser consideirado um tipo genérico para qualquer tipo de valor numérico. Como `int`, `float`, `complex`. Em outros casos pode ser que o banco usado seja o [mongodb](https://www.mongodb.com/) onde o tipo do identificador é um [`ObjectId`](https://docs.mongodb.com/manual/reference/method/ObjectId/). Nesse caso fica praticamente inviável validar o tipo. Pois o valor é dado partindo de um hash em hexa decimal. Podemos usar `Any`, pra validar somente que o valor existe na resposta da API. Por um exemplo.
-
-Os estilos de uso da biblioteca tendem a ser ilimitados em relação a bibliotecas externas usadas. Ou seja, será uma lib. de validação genérica.
+Existem diversos casos em testes onde não é possível ser totalmente deterministico. No exemplo passado não é possível determinar exatamente qual o valor do `identificador` do usuário no banco de dados, usado no exemplo acima. Mas é possível validar que o dado existe, visto que uma das regras é que todo objeto tenha um identificador no banco de dados. Então dessa maneira sabemos que o tipo do valor do `indentificador` é `int`, imaginando um banco de dados relacional, ou de maneira mais geral, `Number`, que pode ser consideirado um tipo genérico para qualquer tipo de valor numérico, como `int`, `float` e `complex`. Em outros casos pode ser que o banco usado seja o [mongodb](https://www.mongodb.com/) onde o tipo do identificador é um [`ObjectId`](https://docs.mongodb.com/manual/reference/method/ObjectId/). Nesse caso fica praticamente inviável validar o tipo. Pois o valor é dado partindo de um hash em hexadecimal. Podemos usar `Any`, pra validar somente que o valor existe na resposta da API, por exemplo.
+Os estilos de uso da biblioteca tendem a ser ilimitados em relação a bibliotecas externas utilizadas. Ou seja, será uma lib de validação genérica.
 
 
 ## Validadores
 
 A idéia dos validadores é trabalhar com os possíves tipos de dados que podem ser encontrados em uma tabela e fazer a avaliação dos mesmos usando a biblioteca.
 
+
 ### Validadores estáticos
 
-Tipos de validadores onde somente o tipo deve ser suficiente para o match ocorrer. Ou seja, não há parâmetros para esse validadores. `Any` por exemplo, só deve checar se o valor recebido existe, indepente do seu tipo. Já o validador `Boolean` deve checar se o tipo recebido corresponde ao range de valores `True` ou `False`
+Tipos de validadores onde somente o tipo deve ser suficiente para o match ocorrer. Ou seja, não há parâmetros para esse validadores. `Any` por exemplo, só deve checar se o valor recebido existe, indepente do seu tipo. Já o validador `Boolean` deve checar se o tipo recebido corresponde ao range de valores `True` ou `False`.
+
 
 #### Any
 
-O tipo Any tem a função de checar somente se o valor existe, não se responsabilizando pela identificação do tipo ou mesmo pelo conteúdo. Isso ocorre em casos onde a tabela não consegue expor algum tipo de validação.
+O tipo `Any` tem a função de checar somente se o valor existe, não se responsabilizando pela identificação do tipo ou mesmo pelo conteúdo. Isso ocorre em casos onde a tabela não consegue expor algum tipo de validação.
 
 ```Gherkin
 Então a API deve retornar
@@ -53,7 +55,7 @@ Então a API deve retornar
 
 #### Boolean
 
-A idéia do tipo `Boolean` é fazer o esquema mais simples de validação, pois o boolean só tem dois estados.
+A idéia do tipo `Boolean` é fazer o esquema mais simples de validação, pois o boleano só tem dois estados.
 
 ```Gherkin
 Então a API deve retornar
@@ -61,17 +63,17 @@ Então a API deve retornar
  | sucess   | Boolean |
 ```
 
-No caso onde não será validada a resposta. Mas somente se a API está respondendo no formato correto, `True` ou `False`
+No caso acima não será validada a resposta. Mas somente se a API está respondendo no formato correto, `True` ou `False`.
 
 
 ### Validadores dinâmicos
 
-Validadores dinâmicos devem extender funcionalidades de validadores estáticos. Pois além de fazer a validação do tipo, podem fazer outros tipos de validação. Como exemplo vamos usar o validator `Text`. Ele pode ser usado em sua forma mais simples, estática. `Text`, onde o valor passado ao validador será somente comparado a nível de tipagem. Ou seja, se é uma string. Porém, também é possível usar a forma dinámica. `Text(max_length=10)`. Nesse caso a validação do tipo vai ocorrer, porém também será checado se o tamanho máximo da string é de 10 caracteres.
+Validadores dinâmicos devem extender funcionalidades de validadores estáticos. Pois além de fazer a validação do tipo, podem fazer outras validações. Como exemplo vamos usar o validator `Text`. Ele pode ser usado em sua forma mais simples, estática. `Text`, onde o valor passado ao validador será somente comparado a nível de tipagem. Ou seja, se é uma string. Porém, também é possível usar a forma dinâmica. `Text(max_length=10)`. Nesse caso a validação do tipo vai ocorrer, porém também será checado se o tamanho máximo da string é de 10 caracteres.
+
 
 #### Number
 
 Tipo genérico para qualquer forma numérica, pode-se pensar em [`numbers.Number`](https://docs.python.org/3.8/library/numbers.html#numbers.Number) (tipo genérico em Python). Com isso podemos usar todos os [métodos de comparação embutidos](https://docs.python.org/3.8/library/stdtypes.html#comparisons) no Python para fazer as validações. Algums exemplos:
-
 
 | Método             |
 | ------------------ |
@@ -91,6 +93,7 @@ O que poderia resultar em validadores assim:
 
 Obs: Nesse caso o método `equal (==)` não é aplicável, pois o número pode ser inserido literalmente na tabela.
 
+
 #### [Text](https://docs.python.org/3.8/library/stdtypes.html#text-sequence-type-str)
 
 Além dos métodos de comparação, podem ser usados [métodos embutidos em iteráveis](https://docs.python.org/3.8/library/stdtypes.html#sequence-types-list-tuple-range) como:
@@ -109,7 +112,6 @@ Para que a API seja simplificada pode-se utilizar apenas combinações dos méto
 | min_length | tamanho mínimo  |
 | max_length | tamanho máximo  |
 
-
 O que permite resultar em validadores como:
 
 - `Text`
@@ -121,7 +123,6 @@ O que permite resultar em validadores como:
 - `Text(max_length=7)`
   - valida a string quando tiver o tamanho máximo de 7
 
-
 A API de `Text` deve ser compatível com a definição de [typing.Text](https://docs.python.org/3.8/library/typing.html#typing.Text), onde é mantida a retrocompatibilidade com o tipo `unicode`.
 
 
@@ -129,19 +130,20 @@ A API de `Text` deve ser compatível com a definição de [typing.Text](https://
 
 ...
 
+
 #### DateTime
 
 ...
+
 
 ## Posibilidade de extender novos validadores
 
 ...
 
 
-
 ## API
 
-Penso em levar a complexidade para validação de níveis para os steps
+Penso em levar a complexidade para validação de níveis para os steps.
 
 ```Python
 from behave import then
@@ -165,20 +167,22 @@ from my_custon_validators import Person, Account
 def check_api_response(context, validations):
   validate_table(context.table, data)
   ...
+
 ```
 
 
 ## Arquitetura
 
-a implementação pode ser pensanda em 3 atores principais.
+A implementação pode ser pensanda em 3 atores principais.
 
 `Dispatcher`, `Validator`, `Register`
 
 ...
 
+
 ### validate_table
 
-> TODO: pensar em um nome melhor pra essa função
+> TODO: pensar em um nome melhor pra essa função # validate_rows ? 
 
 Função responsável por fazer o filtro por rows da tabela e separar os valores em três camadas.
 
@@ -186,21 +190,21 @@ Função responsável por fazer o filtro por rows da tabela e separar os valores
 - `static_matches`: Valores definidos com validators estáticos
 - `dynamic_matches`: Valores onde validadores dinâmicos foram definidos
 
-Por exemplo, a função deve envocar a camada do `Dispatcher` para que ele diga se é um Validaror e qual o seu tipo.
+Por exemplo, a função deve evocar a camada do `Dispatcher` para que ele diga se é um validador e qual o seu tipo.
 
 ```Python
 def validate_table(context.table, sequence_data):
     ...
 ```
-
 ...
+
 
 ### Dispatcher
 Podemos pensar em um modelo como o [ast.literal_eval](https://docs.python.org/3.8/library/ast.html#ast.literal_eval) presente na biblioteca padrão para fazer a avaliação das strings no código.
 
 Exemplos:
 
-Quando o valor recebido não foi um validador registrado, a mesma string que foi recebida deve ser retornada
+Quando o valor recebido não for um validador registrado, a mesma string que foi recebida deve ser retornada
 
 ```Python
 >>> validator_eval('7')
@@ -208,6 +212,7 @@ Quando o valor recebido não foi um validador registrado, a mesma string que foi
 ```
 
 Os tipos estáticos de validadores, como `Any`, `Boolean`
+
 ```Python
 >>> validator_eval('StaticValidatorClass')
 ValidatorClass
@@ -223,7 +228,7 @@ Com isso podemos montar um esquema de dispatchers. Onde o ...
 
 ### Validator
 
-Onde o type `Validator` deverá implementar 3 métodos
+Onde o tipo `Validator` deverá implementar 3 métodos
 
 ```Python
 from abc import abstractmethod, ABCMeta
@@ -264,14 +269,17 @@ class MetaStaticValidator(abc=ABCMeta):
 
 O Behave atualmente [oferece suporte](https://github.com/behave/behave/blob/master/tox.ini) as versões do Python 3.2 em diante. Embora ofereça suporte ao Python 2, acredito que isso não deva estar no roadmap.
 
+
 ## Integração contínua
 
 Penso em usar o tox para trabalhar com versões do Python no mesmo test runner.
+
 
 ## Testes
 
 ...
 
+
 ## Padronização de código
 
-Pretendo seguir a risca a PEP-8 e a PEP-257. Todo o código deve ser formatado com [Black](https://github.com/python/black). Sempre quando houver dúvidas sobre identação, opte por [Vertical Hanging Indent](https://github.com/timothycrosley/isort).
+Pretendo seguir a risca a [PEP-8](https://www.python.org/dev/peps/pep-0008/) e a [PEP-257](https://www.python.org/dev/peps/pep-0257/). Todo o código deve ser formatado com [Black](https://github.com/python/black). Sempre quando houver dúvidas sobre identação, opte por [Vertical Hanging Indent](https://github.com/timothycrosley/isort).
