@@ -182,7 +182,7 @@ A implementação pode ser pensanda em 3 atores principais.
 
 ### validate_table
 
-> TODO: pensar em um nome melhor pra essa função # validate_rows ? 
+> TODO: pensar em um nome melhor pra essa função # validate_rows ?
 
 Função responsável por fazer o filtro por rows da tabela e separar os valores em três camadas.
 
@@ -223,6 +223,8 @@ ValidatorClass
 DynamicValidatorClass, validators
 ```
 
+> onde `validators` será um dicionário para as chamadas dos invocáveis correspondentes
+
 Com isso podemos montar um esquema de dispatchers. Onde o ...
 
 
@@ -230,39 +232,94 @@ Com isso podemos montar um esquema de dispatchers. Onde o ...
 
 Onde o tipo `Validator` deverá implementar 3 métodos
 
+- `validate_error`: Retorna o erro de determinado validador
+- `validate_type`: Efetua a validação do tipo
+- `__call__`: Executa a chamada de `validate_type` e retorna seu erro, ou sucesso
+
 ```Python
 from abc import abstractmethod, ABCMeta
 
 
 class MetaStaticValidator(abc=ABCMeta):
-  def __init__(self, value):
-    ...
+    """
+    >>> msv = MetaStaticValidator()
 
-  @abstractmethod
-  def validate_error(self, **kwargs):
-    """
-    ...
-    """
-    ...
+    >>> msv.validate_type('string bolada')
+    # MetaStaticValidatorException: 1 is not Text
 
-  @abstractmethod
-  def validate_type(self):
-    """
-    ...
-    """
-    ...
+    >>> msv.validate_type(False)
+    True, False
 
-  @abstractmethod
-  def __call__(self):
+    >>> msv(True)
+    True
     """
-    ...
+    @abstractmethod
+    def __init__(self):
+        ...
+
+    @abstractmethod
+    def validate_error(self, **kwargs):
+        """Retorna um erro customizado para o validator."""
+        ...
+
+    @abstractmethod
+    def validate_type(self):
+      """Efetua a validação do tipo."""
+      ...
+
+    @abstractmethod
+    def __call__(self):
+      """Executa a chamada de `validate_type` e retorna seu erro, ou sucesso."""
+      ...
+```
+
+### DynamicValidator
+
+Os validadores dinâmicos devem herdar dos validadores estáticos, como já foi dito, todo validador dinâmico também deve ser passível de uso em sua forma estática.
+
+Para que seja possível fazer as validações dinâmicas, os `DynamicValidator`s devem implementar também um método próprio
+
+- `validate_fields`: Método que aplica todas as validações além da tipagem.
+
+
+```Python
+from abc import abstractmethod
+from _validators_abc import MetaStaticValidator
+
+class MetaDynamicValidator(abc=Meta, MetaStaticValidator):
     """
+    >>> mdv = MetaDynamicValidator()
+    >>> mdv('value', validator_1='a', validator_2='b')
+    # MetaDynamicValidatorException: 'value' fails in 'validator_1'
+    """
+    @abstractmethod
+    def validate_fields(self, **validators):
+        """Método que aplica todas as validações além da tipagem."""
+        ...
+
+```
+
+### Register
+
+...
+
+
+### Exceptions
+
+A excessão base deve ser herdada de [BaseException](https://docs.python.org/3.7/library/exceptions.html#BaseException) e partindo dela devem ser criadas as novas classes
+
+```Python
+class BaseValidatorException(BaseException):
     ...
 ```
 
+Onde poderá ser utilizada com uma boa formatação para que seja possível ver o erro.
 
-### Register
-...
+```Python
+>>> val = 1
+>>> raise BaseValidatorException(f'{val} is not Text')
+# BaseValidatorException: 1 is not Text
+```
 
 
 ## Suporte a versões
@@ -272,7 +329,13 @@ O Behave atualmente [oferece suporte](https://github.com/behave/behave/blob/mast
 
 ## Integração contínua
 
-Penso em usar o tox para trabalhar com versões do Python no mesmo test runner.
+Penso em usar o tox para trabalhar com versões do Python no mesmo test runner. Porém, acredito que a escolha da ferramenta de CI, possa ser decidida pelo time.
+
+Alternativas:
+
+- [travis-ci](https://travis-ci.org/)
+- [circle-ci](https://circleci.com/)
+- [gitlab-ci](https://about.gitlab.com/product/continuous-integration/)
 
 
 ## Testes
