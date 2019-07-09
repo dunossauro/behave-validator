@@ -299,6 +299,10 @@ class MetaDynamicValidator(abc=Meta, MetaStaticValidator):
 
 ```
 
+#### Exemplo da aplicação das classes
+
+![validators](images/validators.png)
+
 ### Register
 
 ...

@@ -1,0 +1,21 @@
+@startuml
+class MetaStaticValidator {
+  {abstract} __init__
+  + {abstract} validate_error
+  + {abstract} validate_type
+  + {abstract} __call__
+}
+
+class MetaDynamicValidator {
+  + {abstract} validate_fields
+}
+
+
+MetaStaticValidator	<|-- MetaDynamicValidator
+MetaStaticValidator	<|-- Any
+MetaStaticValidator	<|-- Boolean
+MetaDynamicValidator <|-- Number
+MetaDynamicValidator <|-- Text
+MetaDynamicValidator <|-- Date
+Date <|-- DateTime
+@enduml
