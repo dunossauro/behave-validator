@@ -28,7 +28,7 @@ Funcionalidade: Inserir usuários na API
 
 # Propósito da biblioteca
 
-Existem diversos casos em testes onde não é possível ser totalmente deterministico. No exemplo passado não é possível determinar exatamente qual o valor do `identificador` do usuário no banco de dados, usado no exemplo acima. Mas é possível validar que o dado existe, visto que uma das regras é que todo objeto tenha um identificador no banco de dados. Então dessa maneira sabemos que o tipo do valor do `indentificador` é `int`, imaginando um banco de dados relacional, ou de maneira mais geral, `Number`, que pode ser consideirado um tipo genérico para qualquer tipo de valor numérico, como `int`, `float` e `complex`. Em outros casos pode ser que o banco usado seja o [mongodb](https://www.mongodb.com/) onde o tipo do identificador é um [`ObjectId`](https://docs.mongodb.com/manual/reference/method/ObjectId/). Nesse caso fica praticamente inviável validar o tipo. Pois o valor é dado partindo de um hash em hexadecimal. Podemos usar `Any`, pra validar somente que o valor existe na resposta da API, por exemplo.
+Existem diversos casos em testes onde não é possível ser totalmente determinístico. No exemplo passado não é possível determinar exatamente qual o valor do `identificador` do usuário no banco de dados, como no exemplo acima. Mas é possível validar que o dado existe, visto que uma das regras é que todo objeto tenha um identificador no banco de dados. Então dessa maneira sabemos que o tipo do valor do `indentificador` é `int`, imaginando um banco de dados relacional, ou de maneira mais geral, `Number`, que pode ser considerado um tipo genérico para qualquer tipo de valor numérico, como `int`, `float` e `complex`. Em outros casos pode ser que o banco usado seja o [mongodb](https://www.mongodb.com/) onde o tipo do identificador é um [`ObjectId`](https://docs.mongodb.com/manual/reference/method/ObjectId/). Nesse caso fica praticamente inviável validar o tipo. Pois o valor é dado partindo de um hash em hexadecimal. Podemos usar `Any`, pra validar somente que o valor existe na resposta da API, por exemplo.
 Os estilos de uso da biblioteca tendem a ser ilimitados em relação a bibliotecas externas utilizadas. Ou seja, será uma lib de validação genérica.
 
 
@@ -230,7 +230,7 @@ Com isso podemos montar um esquema de dispatchers. Onde o ...
 
 ### Validator
 
-Onde o tipo `Validator` deverá implementar 3 métodos
+O tipo `Validator` deverá implementar 3 métodos
 
 - `validate_error`: Retorna o erro de determinado validador
 - `validate_type`: Efetua a validação do tipo
@@ -277,7 +277,7 @@ class MetaStaticValidator(abc=ABCMeta):
 
 Os validadores dinâmicos devem herdar dos validadores estáticos, como já foi dito, todo validador dinâmico também deve ser passível de uso em sua forma estática.
 
-Para que seja possível fazer as validações dinâmicas, os `DynamicValidator`s devem implementar também um método próprio
+Para que seja possível fazer as validações dinâmicas, os `DynamicValidator` devem implementar também um método próprio
 
 - `validate_fields`: Método que aplica todas as validações além da tipagem.
 
@@ -310,14 +310,14 @@ class MetaDynamicValidator(abc=Meta, MetaStaticValidator):
 
 ### Exceptions
 
-A excessão base deve ser herdada de [BaseException](https://docs.python.org/3.7/library/exceptions.html#BaseException) e partindo dela devem ser criadas as novas classes
+A exceção base deve ser herdada de [BaseException](https://docs.python.org/3.7/library/exceptions.html#BaseException) e partindo dela devem ser criadas as novas classes
 
 ```Python
 class BaseValidatorException(BaseException):
     ...
 ```
 
-Onde poderá ser utilizada com uma boa formatação para que seja possível ver o erro.
+Poderá ser utilizada com uma boa formatação para que seja possível ver o erro.
 
 ```Python
 >>> val = 1
@@ -328,12 +328,12 @@ Onde poderá ser utilizada com uma boa formatação para que seja possível ver 
 
 ## Suporte a versões
 
-O Behave atualmente [oferece suporte](https://github.com/behave/behave/blob/master/tox.ini) as versões do Python 3.2 em diante. Embora ofereça suporte ao Python 2, acredito que isso não deva estar no roadmap.
+O Behave atualmente [oferece suporte](https://github.com/behave/behave/blob/master/tox.ini) as versões do Python 3.2 em diante. Embora também dê suporte ao Python 2, acredito que isso não deva estar no roadmap.
 
 
 ## Integração contínua
 
-Penso em usar o tox para trabalhar com versões do Python no mesmo test runner. Porém, acredito que a escolha da ferramenta de CI, possa ser decidida pelo time.
+Penso em usar o [tox](https://tox.readthedocs.io/en/latest/) para trabalhar com versões do Python no mesmo test runner. Porém, acredito que a escolha da ferramenta de CI, possa ser decidida pelo time.
 
 Alternativas:
 
