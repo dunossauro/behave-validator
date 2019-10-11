@@ -136,6 +136,18 @@ A API de `Text` deve ser compatível com a definição de [typing.Text](https://
 ...
 
 
+#### Regex
+
+Valida o campo com relação à regexp fornecida pelo usuário. A ideia principal é criar um Field de validação baseada em matchs de regex.
+
+- `Regex`
+  - Não deve haver possíbilidade de um match puro. Só haverá a forma dinâmica desse validador
+- `Regex(r'{\w+:\w+}')`
+  - Forma dinâmica contendo uma regex
+
+OBS: todas as regex por definição devem iginorar minúsculas e mninúsculas.
+
+
 ## Posibilidade de extender novos validadores
 
 ...
